@@ -15,7 +15,7 @@ private val nativeVariants = listOf(
     NativeVariant(OperatingSystemFamily.MACOS, "aarch64", "natives-macos-aarch64"),
 //    NativeVariant(OperatingSystemFamily.WINDOWS, "x86-64", "natives-windows-x64"),
 )
-println(Paths.get("").absolutePathString())
+
 // Add a different runtime variant for each platform
 val javaComponent = components.findByName("java") as AdhocComponentWithVariants
 nativeVariants.forEach { variantDefinition ->
@@ -23,21 +23,27 @@ nativeVariants.forEach { variantDefinition ->
     val nativeJar = tasks.create<Jar>(variantDefinition.classifier + "Jar") {
         archiveClassifier = variantDefinition.classifier
         actions = listOf()
-        doLast {
-            val lib = when (variantDefinition.os) {
-                OperatingSystemFamily.LINUX -> when (variantDefinition.arch) {
-                    "x86-64" -> "libjni_notifications.so"
-                    else -> "libjni_notifications_raspi.so"
-                }
-                OperatingSystemFamily.MACOS -> when (variantDefinition.arch) {
-                    "x86-64" -> "libjni_notifications.jnilib"
-                    else -> "libjni_notifications_arm64.jnilib"
-                }
-                OperatingSystemFamily.WINDOWS -> "jni_notificationsi.dll"
-                else -> error("invalid os ${variantDefinition.os}")
+        val lib = when (variantDefinition.os) {
+            OperatingSystemFamily.LINUX -> when (variantDefinition.arch) {
+                "x86-64" -> "libjni_notifications.so"
+                else -> "libjni_notifications_raspi.so"
             }
-            archiveFile.get().asFile.writeBytes(projectDir.resolve(lib).readBytes())
+            OperatingSystemFamily.MACOS -> when (variantDefinition.arch) {
+                "x86-64" -> "libjni_notifications.jnilib"
+                else -> "libjni_notifications_arm64.jnilib"
+            }
+            OperatingSystemFamily.WINDOWS -> "jni_notificationsi.dll"
+            else -> error("invalid os ${variantDefinition.os}")
         }
+        from(projectDir.resolve(lib))
+//        println(projectDir.resolve(lib).absolutePath)
+//        from(projectDir.resolve(lib).absolutePath)
+//        eachFile { println(this) }
+//        doLast {
+//
+//            tarTree(archiveFile).plus(projectDir.resolve(lib))
+////            archiveFile.get().asFile.writeBytes(projectDir.resolve(lib).readBytes())
+//        }
     }
 
     val nativeRuntimeElements = configurations.consumable(variantDefinition.classifier + "RuntimeElements") {
