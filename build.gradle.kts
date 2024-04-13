@@ -1,6 +1,3 @@
-import java.nio.file.Paths
-import kotlin.io.path.absolutePathString
-
 plugins {
     java
     `maven-publish`
@@ -9,11 +6,11 @@ plugins {
 data class NativeVariant(val os: String, val arch: String, val classifier: String)
 
 private val nativeVariants = listOf(
-    NativeVariant(OperatingSystemFamily.LINUX, "x86-64", "natives-linux-x64"),
+    NativeVariant(OperatingSystemFamily.LINUX, "x86-64", "natives-linux-x86-64"),
     NativeVariant(OperatingSystemFamily.LINUX, "aarm64", "natives-linux-aarm64"),
-    NativeVariant(OperatingSystemFamily.MACOS, "x86-64", "natives-macos-x64"),
+    NativeVariant(OperatingSystemFamily.MACOS, "x86-64", "natives-macos-x86-64"),
     NativeVariant(OperatingSystemFamily.MACOS, "aarch64", "natives-macos-aarch64"),
-//    NativeVariant(OperatingSystemFamily.WINDOWS, "x86-64", "natives-windows-x64"),
+    //    NativeVariant(OperatingSystemFamily.WINDOWS, "x86-64", "natives-windows-x64"),
 )
 
 // Add a different runtime variant for each platform
@@ -22,7 +19,6 @@ nativeVariants.forEach { variantDefinition ->
     // Creation of the native jars
     val nativeJar = tasks.create<Jar>(variantDefinition.classifier + "Jar") {
         archiveClassifier = variantDefinition.classifier
-        actions = listOf()
         val lib = when (variantDefinition.os) {
             OperatingSystemFamily.LINUX -> when (variantDefinition.arch) {
                 "x86-64" -> "libjni_notifications.so"
@@ -36,14 +32,6 @@ nativeVariants.forEach { variantDefinition ->
             else -> error("invalid os ${variantDefinition.os}")
         }
         from(projectDir.resolve(lib))
-//        println(projectDir.resolve(lib).absolutePath)
-//        from(projectDir.resolve(lib).absolutePath)
-//        eachFile { println(this) }
-//        doLast {
-//
-//            tarTree(archiveFile).plus(projectDir.resolve(lib))
-////            archiveFile.get().asFile.writeBytes(projectDir.resolve(lib).readBytes())
-//        }
     }
 
     val nativeRuntimeElements = configurations.consumable(variantDefinition.classifier + "RuntimeElements") {
@@ -74,7 +62,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.zoffcc.applications"
             artifactId = "jni_notifications"
-            version = "0.0.1"
+            version = "0.0.2"
             from(components["java"])
         }
     }
