@@ -9,9 +9,10 @@ public class Test {
     public static void main(String[] args) {
         int loadjni_res = -1;
         try {
-            loadjni_res = jninotifications_loadjni(new java.io.File(".").getAbsolutePath());
+//            loadjni_res = jninotifications_loadjni(new java.io.File(".").getAbsolutePath());
         } catch (Exception e) {
         }
+        NTFYActivity.initialize();
 
         File icon_file = new File("./icon-linux.png");
         String icon_path = icon_file.getAbsolutePath();

@@ -1,8 +1,38 @@
 package com.zoffcc.applications.jninotifications;
 
+import java.net.URL;
+
 public class NTFYActivity {
     static final String TAG = "NTFYActivity";
     static final String Version = "0.99.2";
+
+    public static void initialize() {
+        String libFilename = null;
+        if (OperatingSystem.getCurrent() == OperatingSystem.LINUX)
+            libFilename = "libjni_notifications.so";
+        else if (OperatingSystem.getCurrent() == OperatingSystem.RASPI)
+            libFilename = "libjni_notifications_raspi.so";
+        else if (OperatingSystem.getCurrent() == OperatingSystem.WINDOWS)
+            libFilename = "jni_notificationsi.dll";
+        else if (OperatingSystem.getCurrent() == OperatingSystem.MACOS)
+            libFilename = "libjni_notifications.jnilib";
+        else if (OperatingSystem.getCurrent() == OperatingSystem.MACARM)
+            libFilename = "libjni_notifications_arm64.jnilib";
+        else {
+            Log.i(TAG, "OS:Unknown operating system: " + OperatingSystem.getCurrent());
+            System.exit(-1);
+        }
+
+        try {
+            URL url = NTFYActivity.class.getResource(libFilename);
+            System.load(url.getFile());
+            Log.i(TAG, "successfully loaded native library path: " + libFilename);
+        } catch (UnsatisfiedLinkError e) {
+            Log.i(TAG, "loadLibrary libjni_notifications failed! path: " + libFilename);
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
 
     public static native String jninotifications_version();
 
@@ -82,31 +112,31 @@ public class NTFYActivity {
         }
     }
 
-    public static int jninotifications_loadjni(String jnilib_path) {
-        String linux_lib_filename;
-        if (OperatingSystem.getCurrent() == OperatingSystem.LINUX) {
-            linux_lib_filename = jnilib_path + "/libjni_notifications.so";
-        } else if (OperatingSystem.getCurrent() == OperatingSystem.RASPI) {
-            linux_lib_filename = jnilib_path + "/libjni_notifications_raspi.so";
-        } else if (OperatingSystem.getCurrent() == OperatingSystem.WINDOWS) {
-            linux_lib_filename = jnilib_path + "/jni_notificationsi.dll";
-        } else if (OperatingSystem.getCurrent() == OperatingSystem.MACOS) {
-            linux_lib_filename = jnilib_path + "/libjni_notifications.jnilib";
-        } else if (OperatingSystem.getCurrent() == OperatingSystem.MACARM) {
-            linux_lib_filename = jnilib_path + "/libjni_notifications_arm64.jnilib";
-        } else {
-            Log.i(TAG, "OS:Unknown operating system: " + OperatingSystem.getCurrent());
-            return -1;
-        }
-
-        try {
-            System.load(linux_lib_filename);
-            Log.i(TAG, "successfully loaded native library path: " + linux_lib_filename);
-            return 0;
-        } catch (java.lang.UnsatisfiedLinkError e) {
-            Log.i(TAG, "loadLibrary libjni_notifications failed! path: " + linux_lib_filename);
-            e.printStackTrace();
-            return -1;
-        }
-    }
+//    public static int jninotifications_loadjni(String jnilib_path) {
+//        String linux_lib_filename;
+//        if (OperatingSystem.getCurrent() == OperatingSystem.LINUX) {
+//            linux_lib_filename = jnilib_path + "/libjni_notifications.so";
+//        } else if (OperatingSystem.getCurrent() == OperatingSystem.RASPI) {
+//            linux_lib_filename = jnilib_path + "/libjni_notifications_raspi.so";
+//        } else if (OperatingSystem.getCurrent() == OperatingSystem.WINDOWS) {
+//            linux_lib_filename = jnilib_path + "/jni_notificationsi.dll";
+//        } else if (OperatingSystem.getCurrent() == OperatingSystem.MACOS) {
+//            linux_lib_filename = jnilib_path + "/libjni_notifications.jnilib";
+//        } else if (OperatingSystem.getCurrent() == OperatingSystem.MACARM) {
+//            linux_lib_filename = jnilib_path + "/libjni_notifications_arm64.jnilib";
+//        } else {
+//            Log.i(TAG, "OS:Unknown operating system: " + OperatingSystem.getCurrent());
+//            return -1;
+//        }
+//
+//        try {
+//            System.load(linux_lib_filename);
+//            Log.i(TAG, "successfully loaded native library path: " + linux_lib_filename);
+//            return 0;
+//        } catch (java.lang.UnsatisfiedLinkError e) {
+//            Log.i(TAG, "loadLibrary libjni_notifications failed! path: " + linux_lib_filename);
+//            e.printStackTrace();
+//            return -1;
+//        }
+//    }
 }

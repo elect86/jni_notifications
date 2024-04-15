@@ -3,6 +3,17 @@ plugins {
     `maven-publish`
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    val lwjglVersion = "3.3.3"
+    val lwjglNatives = "natives-linux"
+    implementation("org.lwjgl", "lwjgl", lwjglVersion)
+    runtimeOnly("org.lwjgl", "lwjgl", classifier = lwjglNatives, version = lwjglVersion)
+}
+
 data class NativeVariant(val os: String, val arch: String, val classifier: String)
 
 private val nativeVariants = listOf(
@@ -31,7 +42,7 @@ nativeVariants.forEach { variantDefinition ->
             OperatingSystemFamily.WINDOWS -> "jni_notificationsi.dll"
             else -> error("invalid os ${variantDefinition.os}")
         }
-        from(projectDir.resolve(lib))
+        from(projectDir.resolve("src/main/resources/com/zoffcc/applications/jninotifications/$lib"))
     }
 
     val nativeRuntimeElements = configurations.consumable(variantDefinition.classifier + "RuntimeElements") {
@@ -57,12 +68,16 @@ javaComponent.withVariantsFromConfiguration(configurations["runtimeElements"]) {
     skip()
 }
 
+tasks.test {
+    this.systemProperties["java.library.path"] = "ciao"
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "com.zoffcc.applications"
             artifactId = "jni_notifications"
-            version = "0.0.2"
+            version = "0.0.3"
             from(components["java"])
         }
     }
