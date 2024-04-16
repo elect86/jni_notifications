@@ -8,3 +8,5 @@
  */
 
 rootProject.name = "jni_notifications"
+
+includeBuild("../native-support")

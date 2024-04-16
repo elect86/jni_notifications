@@ -4,10 +4,24 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/../native-support" name="native-support">
+                <projects>
+                  <project path="$PROJECT_DIR$/../native-support" />
+                  <project path="$PROJECT_DIR$/../native-support/plugin" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/../native-support" />
+            <option value="$PROJECT_DIR$/../native-support/plugin" />
           </set>
         </option>
       </GradleProjectSettings>

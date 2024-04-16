@@ -262,11 +262,11 @@ public final class Log
 
     public static int println(int bufID, int priority, String tag, String msg)
     {
-        final long threadid = Thread.currentThread().getId();
+        final long threadid = Thread.currentThread().threadId();
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS");
         final Date now = new Date();
         final String datetime = sdf.format(now);
-        System.out.println("" + datetime + ":" + threadid + ":" + priority + ":" + tag + ":" + msg);
+        System.out.println(datetime + ":" + threadid + ":" + priority + ":" + tag + ":" + msg);
 
         return 0;
     }
