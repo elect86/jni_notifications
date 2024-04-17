@@ -10,6 +10,15 @@
               <build path="$PROJECT_DIR$/../native-support" name="native-support">
                 <projects>
                   <project path="$PROJECT_DIR$/../native-support" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../native-support/loader" name="loader">
+                <projects>
+                  <project path="$PROJECT_DIR$/../native-support/loader" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../native-support/plugin" name="plugin">
+                <projects>
                   <project path="$PROJECT_DIR$/../native-support/plugin" />
                 </projects>
               </build>
@@ -21,6 +30,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/../native-support" />
+            <option value="$PROJECT_DIR$/../native-support/loader" />
             <option value="$PROJECT_DIR$/../native-support/plugin" />
           </set>
         </option>

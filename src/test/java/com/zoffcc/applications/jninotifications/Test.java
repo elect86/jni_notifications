@@ -1,12 +1,17 @@
 package com.zoffcc.applications.jninotifications;
 
+import org.lwjgl.system.MemoryUtil;
+
 import java.io.File;
+import java.lang.management.ManagementFactory;
 
 import static com.zoffcc.applications.jninotifications.NTFYActivity.*;
 
 public class Test {
 
     public static void main(String[] args) {
+        MemoryUtil.memAlloc(1);
+        System.out.println(ManagementFactory.getRuntimeMXBean().getClassPath());
         int loadjni_res = -1;
         try {
 //            loadjni_res = jninotifications_loadjni(new java.io.File(".").getAbsolutePath());
